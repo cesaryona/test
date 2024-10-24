@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  app:
+    image: test
+    container_name: spring_app
+    environment:
+      MONGO_URI: mongodb://admin:123@mongodb:27017/user?authSource=admin
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongodb
+    networks:
+      - mongo-network
+
+  mongodb:
+    image: mongo
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=123
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - mongo-network
+
+networks:
+  mongo-network:
+    driver: bridge
+
+volumes:
+  mongo_data:
+    driver: local
